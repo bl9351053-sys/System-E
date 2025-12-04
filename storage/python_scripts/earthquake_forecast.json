@@ -1,0 +1,32 @@
+[
+    {
+        "Year": 2025,
+        "Linear_Trend_Forecast": 16.0,
+        "MA_3_Forecast": 19.0,
+        "MA_5_Forecast": 19.0
+    },
+    {
+        "Year": 2026,
+        "Linear_Trend_Forecast": 14.500000000000004,
+        "MA_3_Forecast": 17.333333333333332,
+        "MA_5_Forecast": 19.0
+    },
+    {
+        "Year": 2027,
+        "Linear_Trend_Forecast": 13.000000000000004,
+        "MA_3_Forecast": 19.11111111111111,
+        "MA_5_Forecast": 19.0
+    },
+    {
+        "Year": 2028,
+        "Linear_Trend_Forecast": 11.500000000000004,
+        "MA_3_Forecast": 18.48148148148148,
+        "MA_5_Forecast": 18.0
+    },
+    {
+        "Year": 2029,
+        "Linear_Trend_Forecast": 10.000000000000005,
+        "MA_3_Forecast": 18.308641975308642,
+        "MA_5_Forecast": 19.2
+    }
+]

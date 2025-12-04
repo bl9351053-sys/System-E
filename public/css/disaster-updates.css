@@ -1,0 +1,64 @@
+/* Disaster Updates Index Styles */
+
+.update-card {
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    background: white;
+}
+
+.update-card-critical {
+    background: #fff5f5;
+}
+
+.update-card-high {
+    background: #fffbf0;
+}
+
+.update-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.update-info {
+    flex: 1;
+}
+
+.update-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.update-title {
+    margin: 0;
+    color: #333;
+}
+
+.update-meta {
+    color: #999;
+}
+
+.update-description {
+    color: #666;
+    margin: 0;
+}
+
+.update-action-btn {
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+}
+
+.pagination-container {
+    margin-top: 1.5rem;
+}
+
+.no-updates {
+    color: #666;
+    padding: 1rem;
+}

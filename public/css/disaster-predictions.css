@@ -1,0 +1,73 @@
+/* Disaster Predictions Index Styles */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.risk-row-critical {
+    background: #fff5f5;
+}
+
+.risk-row-high {
+    background: #fffbf0;
+}
+
+.risk-row-normal {
+    background: white;
+}
+
+.location-coordinates {
+    color: #999;
+}
+
+.risk-level-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.risk-bar-background {
+    background: #e0e0e0;
+    height: 8px;
+    width: 100px;
+    border-radius: 4px;
+}
+
+.risk-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.risk-bar-critical {
+    background: #dc3545;
+}
+
+.risk-bar-high {
+    background: #fd7e14;
+}
+
+.risk-bar-medium {
+    background: #ffc107;
+}
+
+.risk-bar-low {
+    background: #28a745;
+}
+
+.recovery-na {
+    color: #999;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.pagination-container {
+    margin-top: 1.5rem;
+}
+
+.no-predictions {
+    color: #666;
+    padding: 1rem;
+}
