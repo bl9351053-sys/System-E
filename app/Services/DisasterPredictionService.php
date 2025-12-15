@@ -15,7 +15,7 @@ class DisasterPredictionService
     }
 
     /**
-     * Filter predictions within a given radius (km) of a location.
+     * 
      */
     public function getNearbyPredictions($latitude, $longitude, $radiusKm = 10)
     {
@@ -29,7 +29,7 @@ class DisasterPredictionService
     }
 
     /**
-     * Analyze risk levels and recovery days from nearby predictions.
+     *
      */
     public function analyzeRisk($nearbyPredictions)
     {

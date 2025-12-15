@@ -24,7 +24,6 @@ class ChooseRoleController extends Controller
     public function home()
     {
         Log::info('ChooseRoleController@home called; ADMIN_APP_URL=' . env('ADMIN_APP_URL'));
-        // Always show the choose page as the home route so users can pick Admin or Resident
         $adminUrl = env('ADMIN_APP_URL');
         return view('choose-role', compact('adminUrl'));
     }
@@ -42,15 +41,12 @@ class ChooseRoleController extends Controller
             return redirect()->route('dashboard');
         }
 
-        // Default admin URL — allow override using ADMIN_APP_URL in the environment
         $adminUrl = env('ADMIN_APP_URL');
         Log::info('ChooseRoleController@redirect called: role=' . $role . ', ADMIN_APP_URL=' . ($adminUrl ?? 'null'));
 
-        // If the requested role is admin, go to the admin URL; otherwise fall back to dashboard
         if ($role === 'admin') {
             if ($adminUrl) {
                 try {
-                    // Try a small HTTP head to the admin URL to confirm reachability
                     $resp = Http::timeout(3)->get($adminUrl);
                     Log::info('Admin URL check response status: ' . $resp->status());
                     if ($resp->status() >= 200 && $resp->status() < 400) {
@@ -60,7 +56,6 @@ class ChooseRoleController extends Controller
                     Log::warning('Admin URL check failed: ' . $e->getMessage());
                 }
             }
-            // If we reach here, admin URL is not configured or not reachable
             return redirect()->route('admin.redirect')->with('error', 'Admin app not reachable; check ADMIN_APP_URL');
         }
 

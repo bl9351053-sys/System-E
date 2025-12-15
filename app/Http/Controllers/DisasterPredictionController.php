@@ -17,40 +17,41 @@ class DisasterPredictionController extends Controller
         $this->geoService = $geoService;
         $this->disasterPredictionService = $disasterPredictionService;
     }
-    // Admin / Resident index
     public function index()
     {
         $predictions = DisasterPrediction::orderByDesc('risk_level')
             ->orderByDesc('predicted_at')
             ->paginate(20);
 
+        if (request()->expectsJson()) {
+            return response()->json($predictions);
+        }
+
         return view('disaster-predictions.index', compact('predictions'));
     }
 
-    // Admin create form
     public function create()
     {
         return view('disaster-predictions.create');
     }
 
-    // Admin store prediction
     public function store(Request $request)
     {
          $validated = $request->validate([
         'disaster_type' => 'required|string',
-        'description' => 'nullable|string', // admin
-        'severity' => 'nullable|in:low,medium,high,critical', // admin
-        'affected_areas' => 'nullable|string', // admin
-        'probability' => 'nullable|numeric|min:0|max:100', // admin
-        'latitude' => 'nullable|numeric', // resident
-        'longitude' => 'nullable|numeric', // resident
-        'location_name' => 'nullable|string', // resident
-        'risk_level' => 'nullable|integer|min:1|max:10', // resident
-        'predicted_recovery_days' => 'nullable|integer|min:0', // resident
-        'predicted_date' => 'nullable|date', // admin
-        'valid_until' => 'nullable|date', // admin
-        'predicted_at' => 'nullable|date', // resident
-        'user_id' => 'nullable|exists:users,id', // admin
+        'description' => 'nullable|string',
+        'severity' => 'nullable|in:low,medium,high,critical',
+        'affected_areas' => 'nullable|string',
+        'probability' => 'nullable|numeric|min:0|max:100',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+        'location_name' => 'nullable|string',
+        'risk_level' => 'nullable|integer|min:1|max:10',
+        'predicted_recovery_days' => 'nullable|integer|min:0',
+        'predicted_date' => 'nullable|date',
+        'valid_until' => 'nullable|date',
+        'predicted_at' => 'nullable|date',
+        'user_id' => 'nullable|exists:users,id',
     ]);
 
         DisasterPrediction::create($validated);
@@ -59,13 +60,15 @@ class DisasterPredictionController extends Controller
             ->with('success', 'Disaster prediction added successfully!');
     }
 
-    // Show a single prediction
     public function show(DisasterPrediction $disasterPrediction)
     {
+        if (request()->expectsJson()) {
+            return response()->json(['data' => $disasterPrediction]);
+        }
+
         return view('disaster-predictions.show', compact('disasterPrediction'));
     }
 
-    // API: get active high-risk predictions
     public function active()
     {
         $predictions = DisasterPrediction::where('risk_level', '>=', 5)
@@ -75,7 +78,6 @@ class DisasterPredictionController extends Controller
         return response()->json($predictions);
     }
 
-    // Analyze risk near a location
     public function analyze(Request $request)
     {
         $latitude = $request->input('latitude');
@@ -85,13 +87,11 @@ class DisasterPredictionController extends Controller
             return response()->json(['error' => 'Latitude and longitude required'], 422);
         }
 
-        // Filter predictions within 10km
-        // Use DisasterPredictionService for nearby predictions and risk analysis
+
         $nearbyPredictions = $this->disasterPredictionService->getNearbyPredictions($latitude, $longitude, 10);
         $analysis = $this->disasterPredictionService->analyzeRisk($nearbyPredictions);
 
         return response()->json($analysis);
     }
 
-    // Distance calculation now handled by GeoService
 }

@@ -2,51 +2,136 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DisasterUpdate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DisasterUpdateController extends Controller
 {
+    
     public function index()
     { 
-        $updates = DisasterUpdate::orderBy('issued_at', 'desc')->paginate(20);
-        return view('disaster-updates.index', compact('updates'));
+        try {
+            $adminBase = rtrim(env('ADMIN_API_URL', 'http://127.0.0.1:8000'), '/');
+            $token = env('ADMIN_API_TOKEN');
+
+            $resp = Http::withToken($token)
+                ->acceptJson()
+                ->timeout(5)
+                ->get($adminBase . '/api/updates');
+
+            if (! $resp->successful()) {
+                Log::warning('System-E proxy warning: admin API responded with status ' . $resp->status());
+                return response()->json(['data' => [], 'message' => 'Failed to fetch updates from admin API'], 502);
+            }
+
+            $data = $resp->json();
+
+            $items = $data['data'] ?? $data;
+            $mapped = collect($items)->map(function ($item) {
+                return [
+                    'id' => $item['id'] ?? null,
+                    'disaster_type' => $item['disaster_type'] ?? null,
+                    'title' => $item['title'] ?? null,
+                    'description' => $item['description'] ?? null,
+                    'severity' => $item['severity'] ?? null,
+                    'source' => $item['source'] ?? null,
+                    'latitude' => isset($item['latitude']) ? (float) $item['latitude'] : null,
+                    'longitude' => isset($item['longitude']) ? (float) $item['longitude'] : null,
+                    'issued_at' => $item['issued_at'] ?? null,
+                    'created_at' => $item['created_at'] ?? null,
+                    'updated_at' => $item['updated_at'] ?? null,
+                ];
+            })->values()->all();
+
+            return response()->json([
+                'data' => $mapped,
+                'current_page' => $data['current_page'] ?? $data['page'] ?? 1,
+                'last_page' => $data['last_page'] ?? $data['lastPage'] ?? null,
+                'total' => $data['total'] ?? count($mapped),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('System-E proxy error fetching updates: ' . $e->getMessage());
+            return response()->json(['data' => [], 'message' => 'Error fetching updates: ' . $e->getMessage()], 500);
+        }
     }
 
-    public function create()
+    public function show($id)
     {
-        return view('disaster-updates.create');
+        try {
+            $adminBase = rtrim(env('ADMIN_API_URL', 'http://127.0.0.1:8000'), '/');
+            $token = env('ADMIN_API_TOKEN');
+            
+            $resp = Http::withToken($token)
+                ->acceptJson()
+                ->timeout(5)
+                ->get($adminBase . '/api/updates/' . $id);
+            
+            if (! $resp->successful()) {
+                Log::warning('System-E proxy warning (show): admin API responded with status ' . $resp->status());
+                return response()->json(['message' => 'Failed to fetch update from admin API'], 502);
+            }
+
+            $raw = $resp->json();
+            $item = $raw['data'] ?? $raw;
+            $mapped = [
+                'id' => $item['id'] ?? null,
+                'disaster_type' => $item['disaster_type'] ?? null,
+                'title' => $item['title'] ?? null,
+                'description' => $item['description'] ?? null,
+                'severity' => $item['severity'] ?? null,
+                'source' => $item['source'] ?? null,
+                'latitude' => isset($item['latitude']) ? (float) $item['latitude'] : null,
+                'longitude' => isset($item['longitude']) ? (float) $item['longitude'] : null,
+                'issued_at' => $item['issued_at'] ?? null,
+                'created_at' => $item['created_at'] ?? null,
+                'updated_at' => $item['updated_at'] ?? null,
+            ];
+
+            return response()->json(['data' => $mapped]);
+        } catch (\Exception $e) {
+            Log::error('System-E proxy error fetching update: ' . $e->getMessage());
+            return response()->json(['message' => 'Error fetching update: ' . $e->getMessage()], 500);
+        }
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'disaster_type' => 'required|in:typhoon,earthquake,flood,landslide',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'severity' => 'required|in:low,moderate,high,critical',
-            'source' => 'nullable|string',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'issued_at' => 'required|date',
-        ]);
-
-        $validated['source'] = $validated['source'] ?? 'PAGASA/PhiVolcs';
-
-        DisasterUpdate::create($validated);
-
-        return redirect()->route('disaster-updates.index')
-            ->with('success', 'Disaster update added successfully!');
-    }
-
-    public function show(DisasterUpdate $disasterUpdate)
-    {
-        return view('disaster-updates.show', compact('disasterUpdate'));
-    }
-
+   
     public function latest()
     {
-        $updates = DisasterUpdate::orderBy('issued_at', 'desc')->take(10)->get();
-        return response()->json($updates);
+        try {
+            $adminBase = rtrim(env('ADMIN_API_URL', 'http://127.0.0.1:8000'), '/');
+            $token = env('ADMIN_API_TOKEN');
+            
+            $resp = Http::withToken($token)
+                ->acceptJson()
+                ->timeout(5)
+                ->get($adminBase . '/api/updates?per_page=10');
+            
+            if (! $resp->successful()) {
+                Log::warning('System-E proxy warning (latest): admin API responded with status ' . $resp->status());
+                return response()->json(['data' => [], 'message' => 'Failed to fetch latest updates'], 502);
+            }
+
+            $data = $resp->json();
+            $items = $data['data'] ?? $data;
+            $mapped = collect($items)->map(function ($item) {
+                return [
+                    'id' => $item['id'] ?? null,
+                    'disaster_type' => $item['disaster_type'] ?? null,
+                    'title' => $item['title'] ?? null,
+                    'description' => $item['description'] ?? null,
+                    'severity' => $item['severity'] ?? null,
+                    'source' => $item['source'] ?? null,
+                    'latitude' => isset($item['latitude']) ? (float) $item['latitude'] : null,
+                    'longitude' => isset($item['longitude']) ? (float) $item['longitude'] : null,
+                    'issued_at' => $item['issued_at'] ?? null,
+                ];
+            })->values()->all();
+
+            return response()->json(['data' => $mapped]);
+        } catch (\Exception $e) {
+            Log::error('System-E proxy error fetching latest updates: ' . $e->getMessage());
+            return response()->json(['data' => []], 500);
+        }
     }
 }

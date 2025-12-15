@@ -11,21 +11,18 @@ return new class extends Migration
         Schema::create('families', function (Blueprint $table) {
             $table->id();
 
-            // Family info
-            $table->string('family_head_name'); // Formerly 'family_name' in resident system
+        
+            $table->string('family_head_name');
             $table->string('contact_number')->nullable();
             $table->text('address')->nullable();
 
-            // Members info
-            $table->integer('total_members')->default(1); // Formerly 'number_of_members'
+            $table->integer('total_members')->default(1);
 
-            // Evacuation info
             $table->foreignId('evacuation_area_id')->nullable()->constrained()->onDelete('set null');
-            $table->timestamp('checked_in_at')->nullable();   // Resident system
-            $table->timestamp('checked_out_at')->nullable();  // Resident system
-            $table->timestamp('evacuated_at')->nullable();    // Admin system
+            $table->timestamp('checked_in_at')->nullable();   
+            $table->timestamp('checked_out_at')->nullable(); 
+            $table->timestamp('evacuated_at')->nullable();    
 
-            // Status
             $table->enum('status', ['evacuated', 'returned', 'pending', 'available', 'full'])->default('pending');
 
             $table->text('special_needs')->nullable();

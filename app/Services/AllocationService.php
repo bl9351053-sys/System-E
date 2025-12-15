@@ -7,7 +7,7 @@ use App\Models\EvacuationArea;
 class AllocationService
 {
     /**
-     * Calculate distance (km) between two lat/lon points using Haversine formula.
+     * 
      *
      * @param float $lat1
      * @param float $lon1
@@ -17,7 +17,7 @@ class AllocationService
      */
     public function calculateDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $earthRadius = 6371; // km
+        $earthRadius = 6371;
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 
@@ -30,8 +30,8 @@ class AllocationService
     }
 
     /**
-     * Compute scoring for a single evacuation area.
-     * Attaches distance_score, capacity_score, risk_score and final_score to the area instance.
+     * 
+     * 
      *
      * @param EvacuationArea $area
      * @param float $latitude
@@ -54,7 +54,7 @@ class AllocationService
     }
 
     /**
-     * Return recommended areas (scored and sorted) from the data store.
+     * 
      *
      * @param float $latitude
      * @param float $longitude
@@ -78,7 +78,7 @@ class AllocationService
      *
      * @param \Illuminate\Support\Collection|array $recommendedAreas
      * @param int $forecastedEvacuees
-     * @return array ['allocations'=>[], 'topRecommendedArea'=>?, 'topAllocated'=>int, 'alternateAreas'=>[]]
+     * @return array 
      */
     public function allocate($recommendedAreas, int $forecastedEvacuees): array
     {

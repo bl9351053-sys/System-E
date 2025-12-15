@@ -5,8 +5,8 @@ namespace App\Services;
 class GeoService
 {
     /**
-     * Calculate the distance between two coordinates using the Haversine formula.
-     * Returns distance in kilometers.
+     * 
+     *
      */
     public function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {

@@ -5,8 +5,8 @@ namespace App\Services;
 class ForecastService
 {
     /**
-     * Return forecast data used by the dashboard charts.
-     * In future this can be replaced by a model or external forecast provider.
+     * 
+     * 
      *
      * @return array
      */
@@ -26,7 +26,7 @@ class ForecastService
     }
 
     /**
-     * Get the latest forecasted evacuees value from forecast data.
+     * 
      *
      * @param array $forecastData
      * @return int

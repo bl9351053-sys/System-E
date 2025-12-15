@@ -14,12 +14,9 @@ class DashboardController extends Controller
         $this->dashboardService = $dashboardService;
     }
 
-    /**
-     * Show the dashboard view. Heavy lifting is delegated to DashboardService.
-     */
+    
     public function index(Request $request)
     {
-        // Optionally accept user location via query or use defaults inside service
         $latitude = $request->query('lat');
         $longitude = $request->query('lng');
 
@@ -28,9 +25,7 @@ class DashboardController extends Controller
         return view('dashboard', $data);
     }
 
-    /**
-     * API: Return the dashboard data as JSON for the residents app
-     */
+    
     public function api(Request $request)
     {
         $latitude = $request->query('lat');
