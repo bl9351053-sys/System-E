@@ -310,7 +310,6 @@ public function edit(EvacuationArea $evacuation_area)
         $evacuationAreas = EvacuationArea::where('status', '!=', 'closed')
             ->get()
             ->map(function($area) use ($latitude, $longitude, $predictions) {
-                // Calculate component scores for consistency
                 $distance = $this->calculateDistance($latitude, $longitude, $area->latitude, $area->longitude);
                 $area->distance = $distance;
                 $area->distance_score = max(0, 10 - $distance);
